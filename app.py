@@ -40,7 +40,6 @@ def index():
         description = request.form.get("description", "").strip()
         priority = request.form.get("priority", "Medium")
 
-        # ---- BACKEND CONSTRAINTS ----
         if (
             not title
             or not description
@@ -57,7 +56,6 @@ def index():
         """, (title, description, priority))
         conn.commit()
 
-    # ---- FETCH DATA ----
     cursor.execute("SELECT * FROM todos WHERE completed = 0 ORDER BY id DESC")
     todo_tasks = cursor.fetchall()
 
