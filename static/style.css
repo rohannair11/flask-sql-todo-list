@@ -19,8 +19,6 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* Top bar */
-
 .top-bar {
     display: flex;
     justify-content: flex-end;
@@ -41,8 +39,6 @@ h1 {
     text-decoration: underline;
 }
 
-/* Stats */
-
 .stats {
     display: flex;
     justify-content: center;
@@ -58,8 +54,6 @@ h1 {
     text-align: center;
     box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
-
-/* Form */
 
 .card {
     background: white;
@@ -95,15 +89,11 @@ button {
     cursor: pointer;
 }
 
-/* Columns */
-
 .columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
-
-/* Tasks */
 
 .todo-item {
     background: white;
@@ -125,8 +115,6 @@ button {
     gap: 10px;
 }
 
-/* Priority */
-
 .priority {
     padding: 4px 10px;
     border-radius: 10px;
@@ -136,8 +124,6 @@ button {
 .priority.low { background: #dcedc8; }
 .priority.medium { background: #ffe0b2; }
 .priority.high { background: #ffcdd2; }
-
-/* Actions */
 
 .action {
     color: #4f6bed;
