@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
-from datetime import datetime
 
 app = Flask(__name__)
 
@@ -24,8 +23,7 @@ def init_db():
             title TEXT NOT NULL,
             description TEXT NOT NULL,
             priority TEXT NOT NULL CHECK(priority IN ('Low','Medium','High')),
-            completed INTEGER NOT NULL CHECK(completed IN (0,1)),
-            created_at TEXT NOT NULL
+            completed INTEGER NOT NULL CHECK(completed IN (0,1))
         )
     """)
     conn.commit()
@@ -52,26 +50,16 @@ def index():
             conn.close()
             return redirect(url_for("index"))
 
-        created_at = datetime.now().strftime("%d %b %Y, %H:%M")
-
         cursor.execute("""
-            INSERT INTO todos (title, description, priority, completed, created_at)
-            VALUES (?, ?, ?, 0, ?)
-        """, (title, description, priority, created_at))
+            INSERT INTO todos (title, description, priority, completed)
+            VALUES (?, ?, ?, 0)
+        """, (title, description, priority))
         conn.commit()
 
-    cursor.execute("""
-        SELECT * FROM todos
-        WHERE completed = 0
-        ORDER BY id DESC
-    """)
+    cursor.execute("SELECT * FROM todos WHERE completed = 0 ORDER BY id DESC")
     todo_tasks = cursor.fetchall()
 
-    cursor.execute("""
-        SELECT * FROM todos
-        WHERE completed = 1
-        ORDER BY id DESC
-    """)
+    cursor.execute("SELECT * FROM todos WHERE completed = 1 ORDER BY id DESC")
     done_tasks = cursor.fetchall()
 
     cursor.execute("SELECT COUNT(*) FROM todos")
@@ -99,10 +87,7 @@ def index():
 def mark_done(todo_id):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE todos SET completed = 1 WHERE id = ?",
-        (todo_id,)
-    )
+    cursor.execute("UPDATE todos SET completed = 1 WHERE id = ?", (todo_id,))
     conn.commit()
     conn.close()
     return redirect(url_for("index"))
@@ -112,10 +97,7 @@ def mark_done(todo_id):
 def undo(todo_id):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE todos SET completed = 0 WHERE id = ?",
-        (todo_id,)
-    )
+    cursor.execute("UPDATE todos SET completed = 0 WHERE id = ?", (todo_id,))
     conn.commit()
     conn.close()
     return redirect(url_for("index"))
@@ -125,10 +107,7 @@ def undo(todo_id):
 def delete(todo_id):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute(
-        "DELETE FROM todos WHERE id = ?",
-        (todo_id,)
-    )
+    cursor.execute("DELETE FROM todos WHERE id = ?", (todo_id,))
     conn.commit()
     conn.close()
     return redirect(url_for("index"))
