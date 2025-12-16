@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Todo List App</h1>
+
+<div class="stats">
+    <div class="stat"><h2>{{ total }}</h2><p>Total</p></div>
+    <div class="stat"><h2>{{ pending }}</h2><p>To Do</p></div>
+    <div class="stat"><h2>{{ completed }}</h2><p>Done</p></div>
+</div>
+
+<form method="POST" class="card">
+    <h3>New Task</h3>
+
+    <div class="form-group">
+        <label>Title</label>
+        <input
+            type="text"
+            name="title"
+            placeholder="e.g. Finish Flask project"
+            maxlength="100"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label>Description</label>
+        <textarea
+            name="description"
+            placeholder="Brief description of the task"
+            maxlength="500"
+            required
+        ></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Priority</label>
+        <select name="priority" required>
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+        </select>
+    </div>
+
+    <button type="submit">Add Task</button>
+</form>
+
+<div class="columns">
+    <div class="column">
+        <h3>To Do</h3>
+        {% for task in todo_tasks %}
+        <div class="todo-item">
+            <div>
+                <strong>{{ task[1] }}</strong>
+                <p>{{ task[2] }}</p>
+            </div>
+            <div class="right">
+                <span class="priority {{ task[3]|lower }}">{{ task[3] }}</span>
+                <a href="/done/{{ task[0] }}" class="action">Done</a>
+                <a href="/delete/{{ task[0] }}" class="delete">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="column">
+        <h3>Done</h3>
+        {% for task in done_tasks %}
+        <div class="todo-item done">
+            <div>
+                <strong>{{ task[1] }}</strong>
+                <p>{{ task[2] }}</p>
+            </div>
+            <div class="right">
+                <span class="priority {{ task[3]|lower }}">{{ task[3] }}</span>
+                <a href="/undo/{{ task[0] }}" class="action">Undo</a>
+                <a href="/delete/{{ task[0] }}" class="delete">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

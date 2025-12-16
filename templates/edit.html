@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="POST" class="todo-form">
+    <input type="text" name="title" placeholder="New task" required>
+    <button type="submit">Add</button>
+</form>
+
+<ul class="todo-list">
+    {% for todo in todos %}
+    <li>
+        {{ todo[1] }}
+        <div class="actions">
+            <a href="/edit/{{ todo[0] }}">Edit</a>
+            <a href="/delete/{{ todo[0] }}" class="delete">Delete</a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
