@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, Response
 import sqlite3
 import os
+from datetime import datetime
+import csv
+import io
 
 app = Flask(__name__)
 
@@ -23,7 +26,8 @@ def init_db():
             title TEXT NOT NULL,
             description TEXT NOT NULL,
             priority TEXT NOT NULL CHECK(priority IN ('Low','Medium','High')),
-            completed INTEGER NOT NULL CHECK(completed IN (0,1))
+            completed INTEGER NOT NULL CHECK(completed IN (0,1)),
+            created_at TEXT NOT NULL
         )
     """)
     conn.commit()
@@ -50,10 +54,12 @@ def index():
             conn.close()
             return redirect(url_for("index"))
 
+        created_at = datetime.now().strftime("%d %b %Y, %H:%M")
+
         cursor.execute("""
-            INSERT INTO todos (title, description, priority, completed)
-            VALUES (?, ?, ?, 0)
-        """, (title, description, priority))
+            INSERT INTO todos (title, description, priority, completed, created_at)
+            VALUES (?, ?, ?, 0, ?)
+        """, (title, description, priority, created_at))
         conn.commit()
 
     cursor.execute("SELECT * FROM todos WHERE completed = 0 ORDER BY id DESC")
@@ -111,6 +117,37 @@ def delete(todo_id):
     conn.commit()
     conn.close()
     return redirect(url_for("index"))
+
+
+# ---- CSV EXPORT (DATA PORTABILITY) ----
+@app.route("/export")
+def export_csv():
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM todos ORDER BY id ASC")
+    rows = cursor.fetchall()
+    conn.close()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow([
+        "ID",
+        "Title",
+        "Description",
+        "Priority",
+        "Completed",
+        "Created At"
+    ])
+
+    for row in rows:
+        writer.writerow(row)
+
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=todos.csv"}
+    )
 
 
 if __name__ == "__main__":
