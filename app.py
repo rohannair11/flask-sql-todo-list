@@ -22,6 +22,7 @@ def init_db():
             title TEXT NOT NULL,
             description TEXT NOT NULL,
             priority TEXT NOT NULL,
+            completed INTEGER NOT NULL DEFAULT 0,
             created_at TEXT NOT NULL
         )
     """)
@@ -46,16 +47,50 @@ def index():
         created_at = datetime.now().strftime("%d %b %Y, %H:%M")
 
         cursor.execute("""
-            INSERT INTO todos (title, description, priority, created_at)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO todos (title, description, priority, completed, created_at)
+            VALUES (?, ?, ?, 0, ?)
         """, (title, description, priority, created_at))
         conn.commit()
 
-    cursor.execute("SELECT * FROM todos ORDER BY id DESC")
-    tasks = cursor.fetchall()
+    cursor.execute("SELECT * FROM todos WHERE completed = 0 ORDER BY id DESC")
+    todo_tasks = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM todos WHERE completed = 1 ORDER BY id DESC")
+    done_tasks = cursor.fetchall()
+
     conn.close()
 
-    return render_template("index.html", tasks=tasks)
+    return render_template(
+        "index.html",
+        todo_tasks=todo_tasks,
+        done_tasks=done_tasks
+    )
+
+
+@app.route("/done/<int:task_id>")
+def mark_done(task_id):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE todos SET completed = 1 WHERE id = ?",
+        (task_id,)
+    )
+    conn.commit()
+    conn.close()
+    return redirect(url_for("index"))
+
+
+@app.route("/undo/<int:task_id>")
+def undo(task_id):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE todos SET completed = 0 WHERE id = ?",
+        (task_id,)
+    )
+    conn.commit()
+    conn.close()
+    return redirect(url_for("index"))
 
 
 @app.route("/edit/<int:task_id>", methods=["GET", "POST"])

@@ -42,19 +42,38 @@
         <!-- RIGHT COLUMN -->
         <div class="right">
 
-            <h3 class="section-title">Your Tasks</h3>
+            <h3 class="section-title">To Do</h3>
 
-            {% for task in tasks %}
+            {% for task in todo_tasks %}
             <div class="task">
                 <div class="task-left">
                     <strong>{{ task[1] }}</strong>
                     <small>{{ task[2] }}</small>
-                    <span class="time">{{ task[4] }}</span>
+                    <span class="time">{{ task[5] }}</span>
                 </div>
 
                 <div class="task-right">
                     <span class="priority {{ task[3]|lower }}">{{ task[3] }}</span>
                     <a href="/edit/{{ task[0] }}">Edit</a>
+                    <a href="/done/{{ task[0] }}">Done</a>
+                    <a href="/delete/{{ task[0] }}" class="danger">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <h3 class="section-title" style="margin-top:40px;">Done</h3>
+
+            {% for task in done_tasks %}
+            <div class="task" style="opacity:0.6;">
+                <div class="task-left">
+                    <strong>{{ task[1] }}</strong>
+                    <small>{{ task[2] }}</small>
+                    <span class="time">{{ task[5] }}</span>
+                </div>
+
+                <div class="task-right">
+                    <span class="priority {{ task[3]|lower }}">{{ task[3] }}</span>
+                    <a href="/undo/{{ task[0] }}">Undo</a>
                     <a href="/delete/{{ task[0] }}" class="danger">Delete</a>
                 </div>
             </div>
