@@ -1,79 +1,69 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>Todo List App</h1>
+<div class="app-shell">
 
-<div class="top-bar">
-    <a href="/export" class="export-btn">Export CSV</a>
-</div>
+    <header class="header">
+        <h1>Todo List App</h1>
+    </header>
 
-<div class="stats">
-    <div class="stat"><h2>{{ total }}</h2><p>Total</p></div>
-    <div class="stat"><h2>{{ pending }}</h2><p>To Do</p></div>
-    <div class="stat"><h2>{{ completed }}</h2><p>Done</p></div>
-</div>
+    <div class="layout">
 
-<form method="POST" class="card">
-    <h3>New Task</h3>
+        <!-- LEFT COLUMN -->
+        <div class="left">
 
-    <div class="form-group">
-        <label>Title</label>
-        <input type="text" name="title" maxlength="100" required>
-    </div>
+            <form method="POST" class="card">
+                <h3>New Task</h3>
 
-    <div class="form-group">
-        <label>Description</label>
-        <textarea name="description" maxlength="500" required></textarea>
-    </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" maxlength="100" required>
+                </div>
 
-    <div class="form-group">
-        <label>Priority</label>
-        <select name="priority">
-            <option>Low</option>
-            <option selected>Medium</option>
-            <option>High</option>
-        </select>
-    </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" maxlength="500" required></textarea>
+                </div>
 
-    <button type="submit">Add Task</button>
-</form>
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select name="priority">
+                        <option>Low</option>
+                        <option selected>Medium</option>
+                        <option>High</option>
+                    </select>
+                </div>
 
-<div class="columns">
-    <div class="column">
-        <h3>To Do</h3>
-        {% for task in todo_tasks %}
-        <div class="todo-item">
-            <div>
-                <strong>{{ task[1] }}</strong>
-                <p>{{ task[2] }}</p>
-                <small class="timestamp">{{ task[5] }}</small>
-            </div>
-            <div class="right">
-                <span class="priority {{ task[3]|lower }}">{{ task[3] }}</span>
-                <a href="/done/{{ task[0] }}" class="action">Done</a>
-                <a href="/delete/{{ task[0] }}" class="delete">Delete</a>
-            </div>
+                <button type="submit">Add Task</button>
+            </form>
+
         </div>
-        {% endfor %}
+
+        <!-- RIGHT COLUMN -->
+        <div class="right">
+
+            <h3 class="section-title">Your Tasks</h3>
+
+            {% for task in tasks %}
+            <div class="task">
+                <div class="task-left">
+                    <strong>{{ task[1] }}</strong>
+                    <small>{{ task[2] }}</small>
+                    <span class="time">{{ task[4] }}</span>
+                </div>
+
+                <div class="task-right">
+                    <span class="priority {{ task[3]|lower }}">{{ task[3] }}</span>
+                    <a href="/edit/{{ task[0] }}">Edit</a>
+                    <a href="/delete/{{ task[0] }}" class="danger">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
     </div>
 
-    <div class="column">
-        <h3>Done</h3>
-        {% for task in done_tasks %}
-        <div class="todo-item done">
-            <div>
-                <strong>{{ task[1] }}</strong>
-                <p>{{ task[2] }}</p>
-                <small class="timestamp">{{ task[5] }}</small>
-            </div>
-            <div class="right">
-                <span class="priority {{ task[3]|lower }}">{{ task[3] }}</span>
-                <a href="/undo/{{ task[0] }}" class="action">Undo</a>
-                <a href="/delete/{{ task[0] }}" class="delete">Delete</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
 </div>
 
 {% endblock %}

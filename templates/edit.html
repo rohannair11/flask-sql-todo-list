@@ -1,20 +1,37 @@
 {% extends "base.html" %}
-
 {% block content %}
-<form method="POST" class="todo-form">
-    <input type="text" name="title" placeholder="New task" required>
-    <button type="submit">Add</button>
-</form>
 
-<ul class="todo-list">
-    {% for todo in todos %}
-    <li>
-        {{ todo[1] }}
-        <div class="actions">
-            <a href="/edit/{{ todo[0] }}">Edit</a>
-            <a href="/delete/{{ todo[0] }}" class="delete">Delete</a>
+<div class="app-shell">
+
+    <header class="header">
+        <h1>Edit Task</h1>
+        <a href="/" class="back">← Back</a>
+    </header>
+
+    <form method="POST" class="card">
+
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" value="{{ task[1] }}" required>
         </div>
-    </li>
-    {% endfor %}
-</ul>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" required>{{ task[2] }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Priority</label>
+            <select name="priority">
+                <option {% if task[3]=='Low' %}selected{% endif %}>Low</option>
+                <option {% if task[3]=='Medium' %}selected{% endif %}>Medium</option>
+                <option {% if task[3]=='High' %}selected{% endif %}>High</option>
+            </select>
+        </div>
+
+        <button type="submit">Update Task</button>
+    </form>
+
+</div>
+
 {% endblock %}
