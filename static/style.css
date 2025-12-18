@@ -9,14 +9,12 @@ body {
     color: #e6e6e6;
 }
 
-/* MAIN WRAPPER */
 .app-shell {
     max-width: 1400px;
     margin: 48px auto;
     padding: 0 32px;
 }
 
-/* HEADER */
 .header {
     margin-bottom: 36px;
 }
@@ -31,20 +29,17 @@ body {
     text-decoration: none;
 }
 
-/* LAYOUT */
 .layout {
     display: grid;
     grid-template-columns: 460px 1fr;
     gap: 48px;
 }
 
-/* LEFT */
 .left {
     display: flex;
     flex-direction: column;
 }
 
-/* FORM CARD */
 .card {
     background: #0f172a;
     border: 1px solid #1e293b;
@@ -100,14 +95,12 @@ button:hover {
     background: #1d4ed8;
 }
 
-/* RIGHT */
 .section-title {
     font-size: 22px;
     margin-bottom: 20px;
     color: #9ca3af;
 }
 
-/* TASKS */
 .task {
     background: #020617;
     border: 1px solid #1e293b;
@@ -138,7 +131,6 @@ button:hover {
     margin-top: 6px;
 }
 
-/* ACTIONS */
 .task-right {
     display: flex;
     align-items: center;
@@ -155,7 +147,6 @@ button:hover {
     color: #f87171;
 }
 
-/* PRIORITY */
 .priority {
     font-size: 14px;
     padding: 6px 10px;
@@ -167,7 +158,6 @@ button:hover {
 .priority.medium { color: #3b82f6; border-color: #3b82f6; }
 .priority.high { color: #ef4444; border-color: #ef4444; }
 
-/* RESPONSIVE */
 @media (max-width: 1100px) {
     .layout {
         grid-template-columns: 1fr;
