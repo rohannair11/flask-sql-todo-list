@@ -16,6 +16,9 @@ body {
 }
 
 .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 36px;
 }
 
@@ -24,7 +27,8 @@ body {
     font-weight: 500;
 }
 
-.back {
+.export {
+    font-size: 16px;
     color: #3b82f6;
     text-decoration: none;
 }
@@ -33,11 +37,6 @@ body {
     display: grid;
     grid-template-columns: 460px 1fr;
     gap: 48px;
-}
-
-.left {
-    display: flex;
-    flex-direction: column;
 }
 
 .card {
@@ -91,10 +90,6 @@ button {
     cursor: pointer;
 }
 
-button:hover {
-    background: #1d4ed8;
-}
-
 .section-title {
     font-size: 22px;
     margin-bottom: 20px;
@@ -107,7 +102,6 @@ button:hover {
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 16px;
-
     display: flex;
     justify-content: space-between;
     gap: 20px;
@@ -154,9 +148,20 @@ button:hover {
     border: 1px solid;
 }
 
-.priority.low { color: #22c55e; border-color: #22c55e; }
-.priority.medium { color: #3b82f6; border-color: #3b82f6; }
-.priority.high { color: #ef4444; border-color: #ef4444; }
+.priority.low {
+    color: #22c55e;
+    border-color: #22c55e;
+}
+
+.priority.medium {
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.priority.high {
+    color: #ef4444;
+    border-color: #ef4444;
+}
 
 @media (max-width: 1100px) {
     .layout {

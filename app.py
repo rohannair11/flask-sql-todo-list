@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, Response
 import sqlite3
 import os
 from datetime import datetime
+import csv
+import io
 
 app = Flask(__name__)
 
@@ -67,14 +69,49 @@ def index():
     )
 
 
+@app.route("/export")
+def export_csv():
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM todos ORDER BY id ASC")
+    rows = cursor.fetchall()
+    conn.close()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow([
+        "ID",
+        "Title",
+        "Description",
+        "Priority",
+        "Status",
+        "Created At"
+    ])
+
+    for row in rows:
+        status = "Done" if row[4] == 1 else "To Do"
+        writer.writerow([
+            row[0],
+            row[1],
+            row[2],
+            row[3],
+            status,
+            row[5]
+        ])
+
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=todos.csv"}
+    )
+
+
 @app.route("/done/<int:task_id>")
 def mark_done(task_id):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE todos SET completed = 1 WHERE id = ?",
-        (task_id,)
-    )
+    cursor.execute("UPDATE todos SET completed = 1 WHERE id = ?", (task_id,))
     conn.commit()
     conn.close()
     return redirect(url_for("index"))
@@ -84,10 +121,7 @@ def mark_done(task_id):
 def undo(task_id):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE todos SET completed = 0 WHERE id = ?",
-        (task_id,)
-    )
+    cursor.execute("UPDATE todos SET completed = 0 WHERE id = ?", (task_id,))
     conn.commit()
     conn.close()
     return redirect(url_for("index"))
